@@ -7,7 +7,7 @@ class JournalEntry:
     def __init__(self, text, mood="neutral", created_at=None):
         text = text.strip()
         if not text:
-            raise ValueError("Journal entry text cannot be empty")
+            raise ValueError("Journal entry text cannot be empty!")
         self.text = text
         self.mood = mood.strip() or "neutral"
         self.created_at = created_at or datetime.now(timezone.utc).isoformat()
