@@ -1,0 +1,5 @@
+[bandit]
+# Paths are relative to the repository root. Add more comma-separated paths as needed.
+exclude = tests,build,dist,Docker_Generated_JournalKit_wheel,__pycache__
+# Common baseline exclusion: B101 flags assert statements. Remove this line to enable it.
+skips = B101

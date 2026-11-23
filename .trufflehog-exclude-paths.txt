@@ -1,0 +1,3 @@
+# Regexes for generated output that should not be scanned.
+(^|/)(build|dist|__pycache__)/
+(^|/)Docker_Generated_JournalKit_wheel/
