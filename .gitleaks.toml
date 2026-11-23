@@ -1,0 +1,12 @@
+title = "JournalKit Gitleaks configuration"
+
+[extend]
+useDefault = true
+
+# Only generated build output is excluded. Keep the default secret rules enabled.
+[[allowlists]]
+description = "Generated build output"
+paths = [
+  '''(^|/)(build|dist|__pycache__)/''',
+  '''(^|/)Docker_Generated_JournalKit_wheel/''',
+]
