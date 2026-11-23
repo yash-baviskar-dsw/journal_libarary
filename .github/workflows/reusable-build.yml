@@ -1,0 +1,48 @@
+name: Reusable JournalKit wheel build
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the selected commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Set package version from commit
+        id: version
+        shell: bash
+        run: |
+          SHORT_SHA="$(git rev-parse --short=7 HEAD)"
+          PACKAGE_VERSION="0.0.0+${SHORT_SHA}"
+          echo "package_version=${PACKAGE_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "short_sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          echo "Building commit ${SHORT_SHA} as version ${PACKAGE_VERSION}"
+
+      - name: Build Docker image
+        run: docker build -t "journalkit-wheel:${{ steps.version.outputs.short_sha }}" -f package/Dockerfile .
+
+      - name: Build wheel and source archive
+        env:
+          PACKAGE_VERSION: ${{ steps.version.outputs.package_version }}
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/ci-artifacts"
+          docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            --env JOURNALKIT_VERSION="$PACKAGE_VERSION" \
+            --volume "$GITHUB_WORKSPACE/ci-artifacts:/artifacts" \
+            "journalkit-wheel:${{ steps.version.outputs.short_sha }}"
+
+      - name: Upload wheel and source archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: journalkit-dist-${{ steps.version.outputs.short_sha }}
+          path: ci-artifacts/*
+          if-no-files-found: error
+          retention-days: 30

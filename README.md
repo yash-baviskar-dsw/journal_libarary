@@ -16,6 +16,10 @@ docker run --rm --user "$(id -u):$(id -g)" \
 
 The `:Z` volume option lets Docker write to the mounted directory on SELinux-enabled Linux hosts. After the container exits, `Docker_Generated_JournalKit_wheel/` contains the `.tar.gz` source archive and `.whl` wheel.
 
+## GitHub Actions build
+
+The **Build JournalKit Wheel** workflow is started manually from the Actions tab. GitHub requires its `workflow_dispatch` file to be present on the repository's default branch for the workflow to be available; from there, select the desired branch in **Run workflow**. The workflow checks out the selected commit and builds through the same Dockerfile and shell script described above. The package version is `0.0.0+<7-character-commit-id>`: the commit ID is in Python's valid local-version suffix. GitHub Actions uploads both the wheel and source archive as a downloadable artifact named `journalkit-dist-<commit-id>`.
+
 ## Local usage after installing the wheel
 
 ```python
