@@ -9,7 +9,7 @@ extensions = [
         include_dirs=[np.get_include()],
     )
 ]
-
+## Example
 setup(
     name="journalkit-poc",
     version="0.1.0",
